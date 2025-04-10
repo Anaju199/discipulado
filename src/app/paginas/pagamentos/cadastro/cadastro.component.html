@@ -1,0 +1,141 @@
+<section class="container_cadastros fomulario ff-inter">
+  <header class="header">
+    <h2>{{ titulo }}</h2>
+  </header>
+
+  <form [formGroup]="formulario">
+
+    <div *ngIf="!alterarSenha">
+
+      <label for="nome">Nome</label>
+      <input
+        type="textarea"
+        class="input"
+        id="nome"
+        formControlName="nome"
+        placeholder="Digite o nome"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('nome')?.errors && formulario.get('nome')?.touched">
+        Nome é Obrigatório!
+      </div>
+
+      <label for="email">E-mail</label>
+      <input
+        type="email"
+        class="input"
+        id="email"
+        formControlName="email"
+        placeholder="Digite o email"
+      >
+      <!-- Campo obrigatório para compras-->
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('email')?.errors && formulario.get('email')?.touched">
+        E-mail é Obrigatório!
+      </div>
+
+      
+      <!-- Campo obrigatório para compras-->
+      <label for="telefone">Telefone</label>
+      <input
+        type="number"
+        class="input"
+        maxlength="20"
+        id="telefone"
+        formControlName="telefone"
+        placeholder="3199999999"
+      >
+      
+    </div>
+
+    <div *ngIf="cadastro || alterarSenha">
+
+      <label for="senha">Senha</label>
+      <input
+        type="password"
+        class="input"
+        id="senha"
+        formControlName="senha"
+        placeholder="Digite a senha"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('senha')?.errors && formulario.get('senha')?.touched">
+        Senha é Obrigatória!
+      </div>
+
+
+      <label for="senha_2">Confirme a senha</label>
+      <input
+        type="password"
+        class="input"
+        id="senha_2"
+        formControlName="senha_2"
+        placeholder="Digite a senha novamente"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('senha_2')?.errors && formulario.get('senha_2')?.touched">
+      Senhas não coincidem
+      </div>
+
+    </div>
+
+    <div *ngIf="!alterarSenha">
+
+      <div class="col-md-6">
+        <input id="addDiscipulador" type="checkbox" formControlName="addDiscipulador" [checked]="false" selected />
+        <label class="campo__check" for="addDiscipulador">Discipulador</label>
+      </div>
+      
+      <div *ngIf="!formulario.get('addDiscipulador')?.value">
+        <label for="nivel">Níveis</label>
+        <div *ngIf="niveis">
+          <select class="select" id="nivel" aria-label="Selecione o nível" formControlName="nivel">
+            <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div *ngIf="formulario.get('addDiscipulador')?.value">
+        <label for="igreja">Igrejas</label>
+        <div *ngIf="igrejas">
+          <select class="select" id="igreja" aria-label="Selecione a igreja" formControlName="igreja">
+            <option disabled selected value="">Escolha uma igreja</option>
+            <option *ngFor="let igreja of igrejas" [value]="igreja.id">{{ igreja.nome }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <input id="administrador" type="checkbox" formControlName="administrador" [checked]="false" selected />
+          <label class="campo__check" for="administrador">Administrador</label>
+        </div>
+      </div>
+
+    </div> 
+
+    <br/>
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex flex-wrap gap-3">
+        <button
+        [disabled]="!formulario.valid"
+        (click)="id ? editar() : cadastrar()"
+        [ngClass]="habilitarBotao()"
+        id="btnSalvar"
+        >Salvar
+      </button>
+      <button (click)="cancelar()" class="botao_forms">Voltar para página Inicial</button>
+    </div>
+    <br/>
+    <!-- <div *ngIf="!id">
+      <p>Já tem cadastro?
+        <a style="color: black;" routerLink="/login"><u>Faça login!</u></a>
+      </p>
+    </div> -->
+    <div *ngIf="id && !alterarSenha">
+      <p>Deseja
+        <a style="color: black;" [routerLink]="['/alterarSenha', id]" [queryParams]="{ alterarSenha: true }"><u>alterar a senha?</u></a>
+      </p>
+    </div>
+  </div>
+</form>
+
+</section>

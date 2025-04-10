@@ -1,0 +1,64 @@
+<div class="container row mx-auto">
+    <div class="container row mx-auto">
+      <div class="col-md-9 align-self-center">
+        <p class="titulo">
+          Alunos
+        </p>
+      </div>
+      <div class="col-md-3 align-self-center">
+        <i class="fa-regular fa-plus"></i><a [routerLink]="['/cadastro']" [queryParams]="{ cadastro: true }" class="add"> Adicionar Aluno</a>
+      </div>
+    </div>
+    <div class="col-md-12 align-self-center">
+      <label style="margin-left: 5px;" for="adm">Pesquisar</label>
+      <div class="d-flex" role="search">
+        <input
+          type="search"
+          class="form-control me-2"
+          placeholder="Digite o nome de quem procura"
+          autofocus
+          [(ngModel)]="filtroNome"
+          (keyup)="pesquisarAluno($event)"
+        >
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div *ngIf="listaAlunos.length > 0, else semAluno">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Editar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let aluno of listaAlunos; let i = index">
+            <tr [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
+              <td><a class="listaAdm" [href]="'/aluno/' + aluno.id">{{ aluno.nome }}</a></td>
+              <td><a class="listaAdm" [href]="'/aluno/' + aluno.id">{{ aluno.email }}</a></td>
+              <td><a class="listaAdm" [href]="'/aluno/' + aluno.id">{{ aluno.telefone }}</a></td>
+              <td><a class="botaoExcluir" href="/editarAluno/{{ aluno.id }}"><i class="fa-solid fa-pencil"></i></a></td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex flex-wrap gap-3" *ngIf="totalPaginas > 1">
+        <button (click)="paginaAnterior()" [ngClass]="habilitarBotao('anterior')" [disabled]="habilitarBotao('anterior') === 'botao_pag_desabilitado'">Anterior</button>
+        <button (click)="proximaPagina()" [ngClass]="habilitarBotao('proxima')" [disabled]="habilitarBotao('proxima') === 'botao_pag_desabilitado'">Próxima</button>
+      </div>
+      <br/>
+    </div>
+  </div>
+  
+  <ng-template #semAluno>
+    <div class="ff-inter centralizar">
+      <p>Não há nenhum aluno cadastrado</p>
+    </div>
+  </ng-template>
+  

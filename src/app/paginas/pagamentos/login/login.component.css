@@ -1,0 +1,14 @@
+.titulo {
+    font-family: Arial, sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+    color: #ffffff; /* Cor branca do texto */
+    text-transform: uppercase;
+    text-align: left;
+    
+    /* Sombra para dar o efeito 3D */
+    text-shadow: 
+        -2px -2px 0px #c0c0c0, 
+        2px 2px 0px #5a5a5a, 
+        4px 4px 0px rgba(0, 0, 0, 0.5);
+}

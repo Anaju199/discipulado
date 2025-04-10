@@ -1,0 +1,8 @@
+main {
+  background: radial-gradient(circle, #79bc62 10%, #6bc04f 100%);
+  /* background-color: #6bc04f; */
+  background-size: cover;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 100px;
+}
