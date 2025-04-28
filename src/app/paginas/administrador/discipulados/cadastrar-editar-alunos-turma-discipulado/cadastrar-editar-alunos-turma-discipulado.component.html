@@ -1,0 +1,40 @@
+<div class="container">
+  <h2>Gerenciar Alunos do Discipulado</h2>
+
+  <div class="search-container">
+    <input type="text" [(ngModel)]="searchText" (input)="filterStudents()" placeholder="Pesquisar alunos..." class="search-input">
+  </div>
+
+  <div class="columns-container">
+    <!-- Alunos Disponíveis -->
+    <div class="column">
+      <h3>Alunos Disponíveis</h3>
+      <div class="students-list">
+        <div 
+          class="student-item"
+          *ngFor="let student of allStudents" 
+          [class.selected]="selectedStudents.includes(student)"
+          (click)="toggleStudentSelection(student)">
+          {{ student.nome }}
+        </div>
+      </div>
+      <button class="btn-add" (click)="addSelectedStudents()">Adicionar Selecionados</button>
+    </div>
+
+    <!-- Alunos da Turma -->
+    <div class="column">
+      <h3>Alunos na Turma</h3>
+      <div class="students-list">
+        <div class="student-item" *ngFor="let student of turmaStudents">
+          {{ student.nome }}
+          <button class="btn-remove" (click)="removeStudent(student)">x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-save" (click)="saveChanges()">Salvar Alterações</button>
+    <button class="btn-cancel" (click)="cancel()">Cancelar</button>
+  </div>
+</div>

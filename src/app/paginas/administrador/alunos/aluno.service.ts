@@ -8,20 +8,25 @@ import { Usuario } from '../../pagamentos/tipos';
   providedIn: 'root'
 })
 export class UsuariosService {
-  private readonly API =  environment.apiUrl + 'discipulos'
-  private readonly API_LISTA =  environment.apiUrl + 'lista_discipulos'
+  private readonly API =  environment.apiUrl + 'usuario_discipulado'
+  private readonly API_LISTA =  environment.apiUrl + 'lista_usuario_discipulado'
 
   constructor(private http: HttpClient) { }
 
-  listar(filtroUsuario: string): Observable<Usuario[]> {
+  listar(filtroUsuario: string, discipulador: boolean): Observable<Usuario[]> {
 
     let params = new HttpParams()
 
     if(filtroUsuario.trim().length > 0){
       params = params.set("nome",filtroUsuario)
     }
+    
+    if(discipulador){
+      params = params.set("discipulador","True")
+    }
 
-    return this.http.get<Usuario[]>(this.API_LISTA, {params})
+    const url = `${this.API_LISTA}/`
+    return this.http.get<Usuario[]>(url, {params})
   }
 
   listarTodos(pagina: number, itensPorPagina: number): Observable<any> {

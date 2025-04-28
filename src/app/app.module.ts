@@ -2,6 +2,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -37,6 +38,9 @@ import { ListarDiscipuladosComponent } from './paginas/administrador/discipulado
 import { AlunoComponent } from './paginas/administrador/alunos/aluno/aluno.component';
 import { CadastrarEditarIgrejaComponent } from './paginas/administrador/igreja/cadastrar-editar-igreja/cadastrar-editar-igreja.component';
 import { ListarIgrejaComponent } from './paginas/administrador/igreja/listar-igreja/listar-igreja.component';
+import { CadastrarEditarMeusDiscipuladosComponent } from './paginas/administrador/discipulados/cadastrar-editar-meus-discipulados/cadastrar-editar-meus-discipulados.component';
+import { ListarMeusDiscipuladosComponent } from './paginas/administrador/discipulados/listar-meus-discipulados/listar-meus-discipulados.component';
+import { CadastrarEditarAlunosTurmaDiscipuladoComponent } from './paginas/administrador/discipulados/cadastrar-editar-alunos-turma-discipulado/cadastrar-editar-alunos-turma-discipulado.component';
 
 @NgModule({
   declarations: [
@@ -71,14 +75,18 @@ import { ListarIgrejaComponent } from './paginas/administrador/igreja/listar-igr
     ListarAlunosComponent,
     AlunoComponent,
     CadastrarEditarIgrejaComponent,
-    ListarIgrejaComponent
+    ListarIgrejaComponent,
+    CadastrarEditarMeusDiscipuladosComponent,
+    ListarMeusDiscipuladosComponent,
+    CadastrarEditarAlunosTurmaDiscipuladoComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

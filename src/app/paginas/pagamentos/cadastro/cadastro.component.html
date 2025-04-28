@@ -46,6 +46,36 @@
         placeholder="3199999999"
       >
       
+      <label for="igreja">Igrejas</label>
+      <div *ngIf="igrejas">
+        <select class="select" id="igreja" aria-label="Selecione a igreja" formControlName="igreja">
+          <option disabled selected value="">Escolha uma igreja</option>
+          <option *ngFor="let igreja of igrejas" [value]="igreja.id">{{ igreja.nome }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <input id="discipulador" type="checkbox" formControlName="discipulador" [checked]="false" selected />
+        <label class="campo__check" for="discipulador">Discipulador</label>
+      </div>
+      <br/>
+
+      <div>
+        <label for="nivel">
+          {{ formulario.get('discipulador')?.value ? 'Nível que irá discipular' : 'Nível do discípulo' }}
+        </label>
+        <div *ngIf="niveis">
+          <select class="select" id="nivel" aria-label="Selecione o nível" formControlName="nivel">
+            <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="col-md-6">
+        <input id="administrador" type="checkbox" formControlName="administrador" [checked]="false" selected />
+        <label class="campo__check" for="administrador">Administrador</label>
+      </div>
+      <br/>
     </div>
 
     <div *ngIf="cadastro || alterarSenha">
@@ -79,39 +109,6 @@
 
     </div>
 
-    <div *ngIf="!alterarSenha">
-
-      <div class="col-md-6">
-        <input id="addDiscipulador" type="checkbox" formControlName="addDiscipulador" [checked]="false" selected />
-        <label class="campo__check" for="addDiscipulador">Discipulador</label>
-      </div>
-      
-      <div *ngIf="!formulario.get('addDiscipulador')?.value">
-        <label for="nivel">Níveis</label>
-        <div *ngIf="niveis">
-          <select class="select" id="nivel" aria-label="Selecione o nível" formControlName="nivel">
-            <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
-          </select>
-        </div>
-      </div>
-      
-      <div *ngIf="formulario.get('addDiscipulador')?.value">
-        <label for="igreja">Igrejas</label>
-        <div *ngIf="igrejas">
-          <select class="select" id="igreja" aria-label="Selecione a igreja" formControlName="igreja">
-            <option disabled selected value="">Escolha uma igreja</option>
-            <option *ngFor="let igreja of igrejas" [value]="igreja.id">{{ igreja.nome }}</option>
-          </select>
-        </div>
-
-        <div class="col-md-6">
-          <input id="administrador" type="checkbox" formControlName="administrador" [checked]="false" selected />
-          <label class="campo__check" for="administrador">Administrador</label>
-        </div>
-      </div>
-
-    </div> 
-
     <br/>
     <div class="d-flex flex-column align-items-center">
       <div class="d-flex flex-wrap gap-3">
@@ -122,7 +119,7 @@
         id="btnSalvar"
         >Salvar
       </button>
-      <button (click)="cancelar()" class="botao_forms">Voltar para página Inicial</button>
+      <button (click)="cancelar()" class="botao_forms">Voltar para usuários</button>
     </div>
     <br/>
     <!-- <div *ngIf="!id">

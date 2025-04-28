@@ -25,6 +25,9 @@ import { ListarDiscipuladosComponent } from './paginas/administrador/discipulado
 import { CadastrarEditarDiscipuladosComponent } from './paginas/administrador/discipulados/cadastrar-editar-discipulados/cadastrar-editar-discipulados.component';
 import { CadastrarEditarIgrejaComponent } from './paginas/administrador/igreja/cadastrar-editar-igreja/cadastrar-editar-igreja.component';
 import { ListarIgrejaComponent } from './paginas/administrador/igreja/listar-igreja/listar-igreja.component';
+import { ListarMeusDiscipuladosComponent } from './paginas/administrador/discipulados/listar-meus-discipulados/listar-meus-discipulados.component';
+import { CadastrarEditarMeusDiscipuladosComponent } from './paginas/administrador/discipulados/cadastrar-editar-meus-discipulados/cadastrar-editar-meus-discipulados.component';
+import { CadastrarEditarAlunosTurmaDiscipuladoComponent } from './paginas/administrador/discipulados/cadastrar-editar-alunos-turma-discipulado/cadastrar-editar-alunos-turma-discipulado.component';
 
 const routes: Routes = [
   {
@@ -95,7 +98,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'editarAluno/:id',
+    path: 'editarUsuario/:id',
     component: CadastroComponent,
     canActivate: [AuthGuard]
   },
@@ -111,13 +114,19 @@ const routes: Routes = [
     // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
   },
   {
-    path: 'listarAlunos',
+    path: 'listarMeusDiscipulados',
+    component: ListarMeusDiscipuladosComponent,
+    canActivate: [AuthGuard],
+    // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
+  },
+  {
+    path: 'listarUsuarios',
     component: ListarAlunosComponent,
     canActivate: [AuthGuard],
     // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
   },
   {
-    path: 'aluno/:id',
+    path: 'usuario/:id',
     component: AlunoComponent,
     canActivate: [AuthGuard]
   },
@@ -135,6 +144,30 @@ const routes: Routes = [
   {
     path: 'cadastrarEditarDiscipulado',
     component: CadastrarEditarDiscipuladosComponent,
+    canActivate: [AuthGuard],
+    // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
+  },
+  {
+    path: 'cadastrarEditarMeusDiscipulado/:id',
+    component: CadastrarEditarMeusDiscipuladosComponent,
+    canActivate: [AuthGuard],
+    // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
+  },
+  {
+    path: 'cadastrarEditarMeusDiscipulado',
+    component: CadastrarEditarMeusDiscipuladosComponent,
+    canActivate: [AuthGuard],
+    // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
+  },
+  {
+    path: 'cadastrarEditarAlunosDiscipulado/:id',
+    component: CadastrarEditarAlunosTurmaDiscipuladoComponent,
+    canActivate: [AuthGuard],
+    // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
+  },
+  {
+    path: 'cadastrarEditarAlunosDiscipulado',
+    component: CadastrarEditarAlunosTurmaDiscipuladoComponent,
     canActivate: [AuthGuard],
     // data: { expectedRole: 'admin' } // Apenas administradores têm acesso
   },

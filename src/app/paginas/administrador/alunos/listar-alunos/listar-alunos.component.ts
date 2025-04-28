@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { UsuariosService } from '../aluno.service';
 import { Usuario } from 'src/app/paginas/pagamentos/tipos';
+import { CadastroService } from 'src/app/paginas/pagamentos/services/cadastro.service';
 
 @Component({
   selector: 'app-listar-alunos',
@@ -10,7 +10,7 @@ import { Usuario } from 'src/app/paginas/pagamentos/tipos';
 })
 export class ListarAlunosComponent implements OnInit {
 
-  listaAlunos: Usuario[] = [];
+  listaUsuarios: Usuario[] = [];
   paginaAtual: number = 1;
   totalPaginas: number = 1;
   itensPorPagina: number = 10;
@@ -19,17 +19,17 @@ export class ListarAlunosComponent implements OnInit {
   adm: string = 'False'
 
   constructor(
-    private service: UsuariosService,
+    private service: CadastroService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.carregarAlunos()
+    this.carregarUsuarios()
   }
 
-  carregarAlunos(){
+  carregarUsuarios(){
     this.service.listarTodos(this.paginaAtual, this.itensPorPagina).subscribe((response) => {
-      this.listaAlunos = response.results
+      this.listaUsuarios = response.results
       this.totalPaginas = Math.ceil(response.count/this.itensPorPagina)
     })
   }
@@ -37,14 +37,14 @@ export class ListarAlunosComponent implements OnInit {
   proximaPagina(): void {
     if (this.paginaAtual < this.totalPaginas) {
       this.paginaAtual++;
-      this.carregarAlunos();
+      this.carregarUsuarios();
     }
   }
 
   paginaAnterior(): void {
     if (this.paginaAtual > 1) {
       this.paginaAtual--;
-      this.carregarAlunos();
+      this.carregarUsuarios();
     }
   }
 
@@ -61,7 +61,7 @@ export class ListarAlunosComponent implements OnInit {
   // excluir(id: number) {
   //   if (confirm('Tem certeza que deseja excluir?')){
   //     this.service.excluir(id).subscribe(() => {
-  //       alert('Aluno excluido com sucesso.')
+  //       alert('Usuario excluido com sucesso.')
   //       this.recarregarComponente()
   //     })
   //   }
@@ -73,16 +73,16 @@ export class ListarAlunosComponent implements OnInit {
   //   this.router.navigate([this.router.url])
   // }
 
-  pesquisarAluno(event: Event) {
+  pesquisarUsuario(event: Event) {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
 
     if (target.type === 'search') {
       this.filtroNome = target.value;
     }
 
-    this.service.listar(this.filtroNome)
-      .subscribe(listaTodosAlunos => {
-        this.listaAlunos = listaTodosAlunos;
+    this.service.listar(this.filtroNome, false)
+      .subscribe(listaTodosUsuarios => {
+        this.listaUsuarios = listaTodosUsuarios;
       });
   }
 

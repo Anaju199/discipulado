@@ -2,7 +2,7 @@
 <div class="container">
   <div class="container row mx-auto" *ngIf="isDiscipulador || isAdmin">
     <div class="col-md-6 mb-4">
-      <h3>Discipulados</h3>
+      <h3>Todos os discipulados</h3>
       <a routerLink="/listarDiscipulados">
         <img 
           src="../../../assets/imagens/disc.jpg" 
@@ -12,8 +12,18 @@
       </a>
     </div>
     <div class="col-md-6 mb-4">
-      <h3>Alunos</h3>
-      <a routerLink="/listarAlunos">
+      <h3>Meus discipulados</h3>
+      <a routerLink="/listarMeusDiscipulados">
+        <img 
+          src="../../../assets/imagens/professor.jpg" 
+          class="img-fluid rounded img-custom"
+          alt="Discipulados"
+          style="cursor: pointer;">
+      </a>
+    </div>
+    <div class="col-md-6 mb-4">
+      <h3>Usuários</h3>
+      <a routerLink="/listarUsuarios">
         <img 
           src="../../../assets/imagens/alunos.jpg" 
           class="img-fluid rounded img-custom"
@@ -21,9 +31,7 @@
           style="cursor: pointer;">
       </a>
     </div>
-  </div>  
-  <div class="container row mx-auto" *ngIf="isAdmin">
-    <div class="col-md-6 mb-4">
+    <div class="col-md-6 mb-4"  *ngIf="isAdmin">
       <h3>Igrejas Parceiras</h3>
       <a routerLink="/listarIgrejas">
         <img 

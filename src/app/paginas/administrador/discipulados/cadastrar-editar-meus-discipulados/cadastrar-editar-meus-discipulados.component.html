@@ -1,0 +1,72 @@
+<section class="container_cadastros fomulario ff-inter">
+    <header class="header">
+      <h2>{{ titulo }}</h2>
+    </header>
+    <form [formGroup]="formulario">
+
+      <label for="nome_turma">Nome da Turma</label>
+      <input
+        class="input"
+        id="nome_turma"
+        formControlName="nome_turma"
+        placeholder="Digite o nome da turma do discipulado"
+      >
+      <div class="mensagem__erro"
+       *ngIf="formulario.get('nome_turma')?.errors && formulario.get('nome_turma')?.touched">
+        Nome da turma é Obrigatório!
+      </div>
+        
+      <label for="discipulador">Discipuladores</label>
+      <div *ngIf="discipuladores">
+        <select class="select" id="discipulador" aria-label="Selecione o discipulador" formControlName="discipulador">
+          <option selected value="">Escolha um discipulador</option>
+          <option *ngFor="let discipulador of discipuladores" [value]="discipulador.id">{{ discipulador.nome }}</option>
+        </select>
+      </div>
+
+      <label for="discipulado">Discipulados</label>
+      <div *ngIf="discipulados">
+        <select class="select" id="discipulado" aria-label="Selecione o discipulado" formControlName="discipulado">
+          <option selected value="">Escolha um discipulado</option>
+          <option *ngFor="let discipulado of discipulados" [value]="discipulado.id">{{ discipulado.nome }}</option>
+        </select>
+      </div>
+
+      <label for="data_inicio">Data de Inicio do discipulado</label>
+      <input
+        type="date"
+        class="input"
+        id="data_inicio"
+        formControlName="data_inicio"
+        placeholder="Digite a data de inicio"
+      >
+      <div class="mensagem__erro"
+      *ngIf="formulario.get('data_inicio')?.errors && formulario.get('data_inicio')?.touched">
+        Data de Inicio é Obrigatório!
+      </div>
+
+      <label for="data_fim">Data Final do discipulado</label>
+      <input
+        type="date"
+        class="input"
+        id="data_fim"
+        formControlName="data_fim"
+        placeholder="Digite a data final"
+      >
+
+      <div class="d-flex flex-column align-items-center">
+        <div class="d-flex flex-wrap gap-3">
+          <button
+            [disabled]="!formulario.valid"
+            (click)="id ? editarDiscipulado() : criarDiscipulado()"
+            [ngClass]="habilitarBotao()"
+            id="btnSalvar"
+          >
+            Salvar
+          </button>
+          <button (click)="cancelar()" class="botao_forms">Cancelar</button>
+        </div>
+      </div>
+    </form>
+  </section>
+  

@@ -44,10 +44,7 @@ export class CadastroComponent implements OnInit {
       this.cadastro = params['cadastro'] === 'true';  // Verifica se alterarSenha é 'true'
     });
 
-    this.discipuladorId = this.userService.retornarId();
-
     this.formulario = this.formBuilder.group({
-      addDiscipulador: [false],
       nome: ['', Validators.compose([
         Validators.required,
         Validators.minLength(2)
@@ -69,7 +66,7 @@ export class CadastroComponent implements OnInit {
       administrador: [false],
       nivel: ['Iniciante'],
       igreja: [''],
-      discipulador: [this.discipuladorId]
+      discipulador: [false]
     });
 
     const id = this.route.snapshot.paramMap.get('id')
@@ -77,11 +74,10 @@ export class CadastroComponent implements OnInit {
     if(id){
       this.titulo = 'Editar informações:'
 
-      this.service.buscarPorId(parseInt(id!),false).subscribe((discipulo) => {
+      this.service.buscarPorId(parseInt(id!)).subscribe((discipulo) => {
         this.id = discipulo.id
 
         this.formulario = this.formBuilder.group({
-          addDiscipulador: [false],
           id: [discipulo.id],
           nome: [discipulo.nome, Validators.compose([
             Validators.required,
@@ -145,11 +141,9 @@ export class CadastroComponent implements OnInit {
       formData.append('discipulador', this.formulario.get('discipulador')!.value);
       formData.append('igreja', this.formulario.get('igreja')!.value);
   
-      const discipulador = this.formulario.get('addDiscipulador')!.value === 'true' || this.formulario.get('addDiscipulador')!.value === true;
-  
-      this.service.criar(formData, discipulador).subscribe(() => {
+      this.service.criar(formData).subscribe(() => {
         alert('Cadastro realizado com sucesso.');
-        this.router.navigate(['/paginaInicial']);
+        this.router.navigate(['/listarUsuarios']);
       }, error => {
         const firstErrorField = Object.keys(error.error)[0]; 
         const errorMessage = error.error[firstErrorField][0]; 
@@ -174,12 +168,10 @@ export class CadastroComponent implements OnInit {
       formData.append('discipulador', this.formulario.get('discipulador')!.value);
       formData.append('igreja', this.formulario.get('igreja')!.value);
 
-      const adm = this.formulario.get('administrador')!.value === 'true' || this.formulario.get('administrador')!.value === true;
-  
       const id = this.formulario.get('id')!.value;
-      this.service.editar(id, formData, adm).subscribe(() => {
+      this.service.editar(id, formData).subscribe(() => {
         alert('Edição realizada com sucesso.');
-        this.router.navigate(['/paginaInicial']);
+        this.router.navigate(['/listarUsuarios']);
       }, error => {
         const firstErrorField = Object.keys(error.error)[0]; 
         const errorMessage = error.error[firstErrorField][0]; 
@@ -203,7 +195,7 @@ export class CadastroComponent implements OnInit {
   }
 
   cancelar() {
-    this.router.navigate(['/paginaInicial'])
+    this.router.navigate(['/listarUsuarios'])
   }
 
   habilitarBotao(): string {

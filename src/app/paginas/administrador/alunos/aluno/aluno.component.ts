@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UsuariosService } from '../aluno.service';
 import { RespostaService } from '../../perguntas/questionario/resposta.service';
 import { Resposta } from '../../perguntas/questionario/questionario';
 import { Usuario } from '../../../pagamentos/tipos';
+import { CadastroService } from 'src/app/paginas/pagamentos/services/cadastro.service';
 
 @Component({
   selector: 'app-aluno',
@@ -18,7 +18,7 @@ export class AlunoComponent implements OnInit {
   // id: number = 0
 
   constructor(
-    private service: UsuariosService,
+    private service: CadastroService,
     private respostaService: RespostaService,
     private router: Router,
     private route: ActivatedRoute

@@ -1,0 +1,95 @@
+<div class="container row mx-auto">
+  <div class="container row mx-auto">
+    <div class="col-md-9 align-self-center">
+      <p class="titulo">
+        Meus Discipulados
+      </p>
+    </div>
+    <div class="col-md-3 align-self-center d-flex justify-content-end">
+      <i class="fa-regular fa-plus"></i>
+      <a href="/cadastrarEditarMeusDiscipulado" class="add">Adicionar Discipulado</a>
+    </div>
+  </div>
+
+  <div class="col-md-12 align-self-center">
+    <label style="margin-left: 5px;" for="adm">Pesquisar</label>
+    <div class="d-flex" role="search">
+      <input
+        type="search"
+        class="form-control me-2"
+        placeholder="Digite o nome de quem procura"
+        autofocus
+        [(ngModel)]="filtroNome"
+        (keyup)="pesquisarDiscipulado($event)"
+      >
+    </div>
+  </div>
+
+  <br><br><br>
+
+  <div *ngIf="listaDiscipulados.length > 0; else semDiscipulado" class="discipulados-grid">
+    <div *ngFor="let discipulado of listaDiscipulados" class="discipulado-card">
+      <div class="card-header">
+        <h3 class="discipulado-title">
+          <a [routerLink]="['/cadastrarEditarMeusDiscipulado', discipulado.id]">
+            {{ discipulado.discipulado_nome }}
+          </a>
+        </h3>
+        <div class="card-subtitle">
+          <div class="discipulador-tag">
+            <i class="fa-solid fa-chalkboard-user"></i> {{ discipulado.discipulador_nome }}
+          </div>
+          <div class="turma-tag">
+            <i class="fa-solid fa-users"></i> {{ discipulado.alunos?.length }} alunos
+          </div>
+          <div class="status-finished" *ngIf="discipulado.data_fim && discipulado.data_fim !== '1900-01-01'; else emAndamento">
+            <i class="fa-solid fa-check-circle"></i> Finalizado
+          </div>
+          <ng-template #emAndamento>
+            <div class="status-ongoing">
+              <i class="fa-solid fa-hourglass-half"></i> Em andamento
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div>
+          <div class="students-title" [routerLink]="['/cadastrarEditarAlunosDiscipulado', discipulado.id]" style="cursor: pointer;">
+            <i class="fa-solid fa-user-graduate"></i> Alunos
+          </div>
+          <div class="students-grid">
+            <div *ngFor="let aluno of discipulado.alunos" class="student-tag">
+              <i class="fa-solid fa-user"></i> {{ aluno.discipulo_nome }}
+            </div>
+          </div>
+        </div>
+      </div>      
+    </div>
+  </div>
+
+  <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-wrap gap-3" *ngIf="totalPaginas > 1">
+      <button (click)="paginaAnterior()" [ngClass]="habilitarBotao('anterior')" [disabled]="habilitarBotao('anterior') === 'botao_pag_desabilitado'" class="botao_pag">
+        Anterior
+      </button>
+      <button (click)="proximaPagina()" [ngClass]="habilitarBotao('proxima')" [disabled]="habilitarBotao('proxima') === 'botao_pag_desabilitado'" class="botao_pag">
+        Próxima
+      </button>
+    </div>
+    <br/>
+  </div>
+</div>
+
+<ng-template #semDiscipulado>
+  <div class="ff-inter centralizar">
+    <p>Não há nenhum discipulado cadastrado</p>
+  </div>
+</ng-template>
+
+
+<!-- 
+  <div class="actions-container">
+    <button [routerLink]="'/listarPerguntas'" class="botao_forms">Todas as perguntas</button>
+    <button [routerLink]="'/cadastrarEditarPergunta/'" class="botao_forms">Adicionar nova pergunta</button>
+  </div> -->

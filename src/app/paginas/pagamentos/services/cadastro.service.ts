@@ -8,13 +8,27 @@ import { Usuario } from '../tipos';
   providedIn: 'root'
 })
 export class CadastroService {
-  private readonly API_DISCIPULOS = environment.apiUrl + 'discipulos'
-  private readonly API_DISCIPULADORES = environment.apiUrl + 'discipuladores'
+  private readonly API = environment.apiUrl + 'usuario_discipulado'
   private readonly API_LISTA_NIVEIS = environment.apiUrl + 'lista_niveis_discipulo'
-  private readonly API_LISTA = environment.apiUrl + 'lista_discipulados'
-  private readonly API_LISTA_DISCIPULOS = environment.apiUrl + 'lista_discipulos'
+  private readonly API_LISTA = environment.apiUrl + 'lista_usuario_discipulado'
 
   constructor(private http: HttpClient) { }
+
+  listar(filtroUsuario: string, discipulador: boolean): Observable<Usuario[]> {
+
+    let params = new HttpParams()
+
+    if(filtroUsuario.trim().length > 0){
+      params = params.set("nome",filtroUsuario)
+    }
+    
+    if(discipulador){
+      params = params.set("discipulador","True")
+    }
+
+    const url = `${this.API_LISTA}/`
+    return this.http.get<Usuario[]>(url, {params})
+  }
 
   listarUsuario(id?: string): Observable<Usuario[]> {
 
@@ -28,11 +42,13 @@ export class CadastroService {
     return this.http.get<Usuario[]>(url, {params})
   }
 
-  listarTodos(): Observable<Usuario[]> {
+  listarTodos(pagina: number, itensPorPagina: number): Observable<any> {
     let params = new HttpParams()
+      .set("_page", pagina)
+      .set("_limit", itensPorPagina)
 
-    const url = `${this.API_LISTA}/`
-    return this.http.get<Usuario[]>(url)
+    const url = `${this.API}/`
+    return this.http.get<any>(url, {params})
   }
 
   listarNiveis(): Observable<string[]> {
@@ -48,54 +64,23 @@ export class CadastroService {
     return this.http.get<Usuario>(url);
   }
 
-  criar(usuario: FormData, adm: boolean): Observable<Usuario> {
-    let url = ''; // Declarar fora do if
-  
-    if (adm) {
-      url = `${this.API_DISCIPULADORES}/`;
-    } else {
-      url = `${this.API_DISCIPULOS}/`;
-    }
-  
+  criar(usuario: FormData): Observable<Usuario> {
+    let url =  `${this.API}/`
     return this.http.post<Usuario>(url, usuario);
   }
 
-  editar(id: number, usuario: FormData, adm: boolean): Observable<Usuario> {
-
-    let url = ''; // Declarar fora do if
-  
-    if (adm) {
-      url = `${this.API_DISCIPULADORES}/${id}/`;
-    } else {
-      url = `${this.API_DISCIPULOS}/${id}/`;
-    }
-    
+  editar(id: number, usuario: FormData): Observable<Usuario> {
+    let url =  `${this.API}/${id}/`
     return this.http.put<Usuario>(url, usuario)
   }
 
-  excluir(id: number, adm: boolean): Observable<Usuario> {
-   
-    let url = ''; // Declarar fora do if
-  
-    if (adm) {
-      url = `${this.API_DISCIPULADORES}/${id}/`;
-    } else {
-      url = `${this.API_DISCIPULOS}/${id}/`;
-    }
-    
+  excluir(id: number): Observable<Usuario> {
+    let url =  `${this.API}/${id}/`
     return this.http.delete<Usuario>(url)
   }
 
-  buscarPorId(id: number, adm: boolean): Observable<Usuario> {
-    
-    let url = ''; // Declarar fora do if
-  
-    if (adm) {
-      url = `${this.API_DISCIPULADORES}/${id}/`;
-    } else {
-      url = `${this.API_DISCIPULOS}/${id}/`;
-    }
-    
+  buscarPorId(id: number): Observable<Usuario> {
+    let url =  `${this.API}/${id}/`
     return this.http.get<Usuario>(url)
   }
 

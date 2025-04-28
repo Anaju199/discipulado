@@ -1,4 +1,3 @@
-
 export interface Usuario {
   id: number;
   nome: string;
@@ -18,6 +17,25 @@ export interface Discipulado {
   nivel: string;
   proximoEstudo: string;
   foto: string;
+}
+
+export interface TurmaDiscipulado {
+  id: number;
+  nome_turma: string;
+  discipulador: Usuario;
+  discipulado: Discipulado;
+  discipulador_nome: string;
+  discipulado_nome: string;
+  data_inicio: string;
+  data_fim: string;
+  alunos?: AlunoTurmaDiscipulado[];
+}
+
+export interface AlunoTurmaDiscipulado {
+  id: number;
+  turma: TurmaDiscipulado;
+  discipulo: Usuario;
+  discipulo_nome: string;
 }
 
 export interface Igreja {
