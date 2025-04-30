@@ -83,17 +83,17 @@ export class ListarDiscipuladosComponent implements OnInit {
     // if (target.type === 'select-one') {
     //   if (target.id === 'cliente') {
     //     this.cliente = target.value;
-    //   } else 
-    // } else 
+    //   } else
+    // } else
     if (target.id === 'nivel') {
         this.nivel = target.value;
       }
-    
+
       if (target.type === 'search') {
       this.filtroNome = target.value;
     }
 
-    this.service.listar(this.filtroNome, this.nivel)
+    this.service.listarDiscipulado(this.filtroNome, this.nivel)
       .subscribe(listaTodosDiscipulados => {
         this.listaDiscipulados = listaTodosDiscipulados;
       });

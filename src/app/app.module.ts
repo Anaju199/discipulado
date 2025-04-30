@@ -41,6 +41,7 @@ import { ListarIgrejaComponent } from './paginas/administrador/igreja/listar-igr
 import { CadastrarEditarMeusDiscipuladosComponent } from './paginas/administrador/discipulados/cadastrar-editar-meus-discipulados/cadastrar-editar-meus-discipulados.component';
 import { ListarMeusDiscipuladosComponent } from './paginas/administrador/discipulados/listar-meus-discipulados/listar-meus-discipulados.component';
 import { CadastrarEditarAlunosTurmaDiscipuladoComponent } from './paginas/administrador/discipulados/cadastrar-editar-alunos-turma-discipulado/cadastrar-editar-alunos-turma-discipulado.component';
+import { MeusDiscipuladosComponent } from './paginas/administrador/discipulados/meus-discipulados/meus-discipulados.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { CadastrarEditarAlunosTurmaDiscipuladoComponent } from './paginas/admini
     ListarIgrejaComponent,
     CadastrarEditarMeusDiscipuladosComponent,
     ListarMeusDiscipuladosComponent,
-    CadastrarEditarAlunosTurmaDiscipuladoComponent
+    CadastrarEditarAlunosTurmaDiscipuladoComponent,
+    MeusDiscipuladosComponent
   ],
   imports: [
     BrowserModule,

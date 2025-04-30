@@ -38,9 +38,9 @@
         <tbody>
           <ng-container *ngFor="let usuario of listaUsuarios; let i = index">
             <tr [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
-              <td><a class="listaAdm" [href]="'/usuario/' + usuario.id">{{ usuario.nome }}</a></td>
-              <td><a class="listaAdm" [href]="'/usuario/' + usuario.id">{{ usuario.email }}</a></td>
-              <td><a class="listaAdm" [href]="'/usuario/' + usuario.id">{{ usuario.telefone }}</a></td>
+              <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.nome }}</a></td>
+              <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.email }}</a></td>
+              <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.telefone }}</a></td>
               <td><a class="botaoExcluir" href="/editarUsuario/{{ usuario.id }}"><i class="fa-solid fa-pencil"></i></a></td>
             </tr>
           </ng-container>
@@ -55,10 +55,9 @@
       <br/>
     </div>
   </div>
-  
+
   <ng-template #semUsuario>
     <div class="ff-inter centralizar">
       <p>Não há nenhum outro usuário cadastrado</p>
     </div>
   </ng-template>
-  

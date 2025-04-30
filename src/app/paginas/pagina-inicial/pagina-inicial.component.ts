@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MenuComponent } from 'src/app/componentes/menu/menu.component';
 import { UserService } from '../pagamentos/services/user.service';
 import { Discipulado } from '../pagamentos/tipos';
-import { DiscipuladoService } from '../administrador/discipulados/discipulado.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,13 +14,8 @@ export class PaginaInicialComponent implements OnInit {
   isDiscipulo: boolean = false;
   isAdmin: boolean = false;
 
-  listaDiscipulados: Discipulado [] = [];
-  link: string = environment.urlImagem
-
   constructor(
-    private userService: UserService,
-    private service: DiscipuladoService,
-    private router: Router
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
@@ -31,12 +23,5 @@ export class PaginaInicialComponent implements OnInit {
     this.isDiscipulador = role === 'discipulador';
     this.isDiscipulo = role === 'discipulo';
     this.isAdmin = role === 'admin';
-    
-    const nivel = this.userService.retornarNivel();
-
-    this.service.listar('', nivel)
-    .subscribe(listaTodosDiscipulados => {
-      this.listaDiscipulados = listaTodosDiscipulados;
-    });
   }
 }

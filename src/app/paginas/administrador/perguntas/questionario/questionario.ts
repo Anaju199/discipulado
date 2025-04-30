@@ -8,6 +8,7 @@ export interface Pergunta {
 export interface Resposta {
   id: number
   usuario: string
+  turma: string
   pergunta: number
   pergunta_texto: string
   resposta: string

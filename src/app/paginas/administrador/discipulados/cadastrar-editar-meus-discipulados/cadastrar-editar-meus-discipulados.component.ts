@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DiscipuladoService } from '../discipulado.service';
 import { CadastroService } from 'src/app/paginas/pagamentos/services/cadastro.service';
 import { Discipulado, Usuario } from 'src/app/paginas/pagamentos/tipos';
+import { UserService } from 'src/app/paginas/pagamentos/services/user.service';
 
 @Component({
   selector: 'app-cadastrar-editar-meus-discipulados',
@@ -18,8 +19,10 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
   titulo: string = 'Adicione uma nova discipulado:';
   discipuladores: Usuario[] = [];
   discipulados: Discipulado[] = [];
+  isAdmin: boolean = false;
 
   constructor(
+    private userService: UserService,
     private service: DiscipuladoService,
     private usuarioService: CadastroService,
     private router: Router,
@@ -28,6 +31,9 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const role = this.userService.retornarUserRole();
+    this.isAdmin = role === 'admin';
+
     this.formulario = this.formBuilder.group({
       id: [null],
       nome_turma: ['', Validators.required],
@@ -37,13 +43,19 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
       data_fim: ['']
     });
 
+    if (!this.isAdmin) {
+      const usuarioId = this.userService.retornarId();
+      this.formulario.get('discipulador')?.setValue(usuarioId);
+      this.formulario.get('discipulador')?.disable();
+    }
+
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
       this.titulo = 'Editar discipulado:';
-      this.service.buscarMeusDiscipulado(parseInt(id!)).subscribe((discipulado) => {
+      this.service.buscarTurmaDiscipulado(parseInt(id!)).subscribe((discipulado) => {
         this.id = discipulado.id;
-    
+
         this.formulario = this.formBuilder.group({
           id: [discipulado.id],
           nome_turma: [discipulado.nome_turma, Validators.required],
@@ -53,7 +65,7 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
           data_fim: [discipulado.data_fim]
         });
       });
-    }    
+    }
 
     this.usuarioService.listar('', true).subscribe(
       discipuladores => {
@@ -66,7 +78,7 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
       }
     );
 
-    this.service.listar('', '').subscribe(
+    this.service.listarDiscipulado('', '').subscribe(
       discipulados => {
         this.discipulados = discipulados;
       },
@@ -86,7 +98,7 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
       formData.append('discipulado', this.formulario.get('discipulado')!.value);
       formData.append('data_inicio', this.formulario.get('data_inicio')!.value);
       formData.append('data_fim', this.formulario.get('data_fim')!.value);
-      
+
       this.service.criarTurmaDiscipulado(formData).subscribe(() => {
         alert('Turma de discipulado criada com sucesso!');
         this.router.navigate(['/listarMeusDiscipulados']);
@@ -95,8 +107,8 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
         const errorMessage = error.error?.[firstErrorField]?.[0] || 'Erro ao editar discipulado';
         alert(`Erro: ${errorMessage}`);
       });
-    }  
-  }  
+    }
+  }
 
   editarDiscipulado() {
     if (this.formulario.valid) {
@@ -106,7 +118,7 @@ export class CadastrarEditarMeusDiscipuladosComponent implements OnInit {
       formData.append('discipulado', this.formulario.get('discipulado')!.value);
       formData.append('data_inicio', this.formulario.get('data_inicio')!.value);
       formData.append('data_fim', this.formulario.get('data_fim')!.value);
-      
+
       const id = this.formulario.get('id')!.value;
       this.service.editarTurmaDiscipulado(id, formData).subscribe(() => {
         alert('Turma de discipulado atualizada com sucesso!');

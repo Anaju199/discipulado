@@ -10,8 +10,9 @@ import { UserService } from 'src/app/paginas/pagamentos/services/user.service';
 })
 export class MenuComponent implements OnInit {
 
+  isDiscipulador: boolean = false;
+  isDiscipulo: boolean = false;
   isAdmin: boolean = false;
-  isUser: boolean = false;
 
   user$ = this.userService.retornarUser();
   nome = this.userService.retornarNome();
@@ -23,8 +24,9 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void {
     const role = this.userService.retornarUserRole();
+    this.isDiscipulador = role === 'discipulador';
+    this.isDiscipulo = role === 'discipulo';
     this.isAdmin = role === 'admin';
-    this.isUser = role === 'user';
   }
 
   logout() {

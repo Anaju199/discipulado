@@ -52,7 +52,7 @@ export class CadastrarEditarPerguntasComponent implements OnInit {
       })
     }
 
-    this.discipuladosService.listar('','').subscribe(
+    this.discipuladosService.listarDiscipulado('','').subscribe(
       discipulados => {
         this.discipulados = discipulados;
       },

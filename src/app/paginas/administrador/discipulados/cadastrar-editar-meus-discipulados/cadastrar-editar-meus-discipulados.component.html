@@ -15,7 +15,7 @@
        *ngIf="formulario.get('nome_turma')?.errors && formulario.get('nome_turma')?.touched">
         Nome da turma é Obrigatório!
       </div>
-        
+
       <label for="discipulador">Discipuladores</label>
       <div *ngIf="discipuladores">
         <select class="select" id="discipulador" aria-label="Selecione o discipulador" formControlName="discipulador">
@@ -69,4 +69,3 @@
       </div>
     </form>
   </section>
-  

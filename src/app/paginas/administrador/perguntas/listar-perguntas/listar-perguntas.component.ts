@@ -30,7 +30,7 @@ export class ListarPerguntasComponent implements OnInit {
   ngOnInit(): void {
     this.carregarPerguntas()
 
-    this.discipuladosService.listar('','').subscribe(
+    this.discipuladosService.listarDiscipulado('','').subscribe(
       discipulados => {
         this.discipulados = discipulados;
       },

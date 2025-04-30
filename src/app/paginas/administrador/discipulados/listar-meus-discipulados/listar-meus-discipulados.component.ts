@@ -11,7 +11,7 @@ import { UserService } from 'src/app/paginas/pagamentos/services/user.service';
 })
 export class ListarMeusDiscipuladosComponent implements OnInit {
 
-  listaDiscipulados: TurmaDiscipulado[] = [];
+  listaTurma: TurmaDiscipulado[] = [];
   paginaAtual: number = 1;
   totalPaginas: number = 1;
   itensPorPagina: number = 10;
@@ -19,29 +19,31 @@ export class ListarMeusDiscipuladosComponent implements OnInit {
   cliente: string = 'True'
   nivel: string = 'False'
   isAdmin: boolean = false;
+  isDiscipulador: boolean = false;
 
   constructor(
     private userService: UserService,
     private service: DiscipuladoService,
     private router: Router
-  ) {
-    // Check if user is admin - you might want to get this from a user service or localStorage
-    const userData = localStorage.getItem('usuario');
-    if (userData) {
-      const user = JSON.parse(userData);
-      this.isAdmin = user.administrador || false;
-    }
-  }
+  ) { }
 
   ngOnInit(): void {
+    const role = this.userService.retornarUserRole();
+    this.isAdmin = role === 'admin';
+    this.isDiscipulador = role === 'discipulador';
+
     this.carregarDiscipulados()
   }
 
   carregarDiscipulados(){
-    this.service.listarMeusDiscipulados(this.paginaAtual, this.itensPorPagina).subscribe((response) => {
-        this.listaDiscipulados = response.results
-        this.totalPaginas = Math.ceil(response.count/this.itensPorPagina)
-      })  
+    let id = this.userService.retornarId();
+
+    if(this.isAdmin){
+      id = null
+    }
+    this.service.listarTurma(this.filtroNome, id).subscribe((response) => {
+        this.listaTurma = response
+      })
   }
 
   proximaPagina(): void {
@@ -89,19 +91,19 @@ export class ListarMeusDiscipuladosComponent implements OnInit {
     // if (target.type === 'select-one') {
     //   if (target.id === 'cliente') {
     //     this.cliente = target.value;
-    //   } else 
-    // } else 
+    //   } else
+    // } else
     if (target.id === 'nivel') {
         this.nivel = target.value;
       }
-    
+
       if (target.type === 'search') {
       this.filtroNome = target.value;
     }
 
     this.service.pesquisarMeusDiscipulados(this.filtroNome, this.nivel)
       .subscribe(listaTodosDiscipulados => {
-        this.listaDiscipulados = listaTodosDiscipulados;
+        this.listaTurma = listaTodosDiscipulados;
       });
   }
 
