@@ -32,6 +32,7 @@
             <th>Nome</th>
             <th>E-mail</th>
             <th>Telefone</th>
+            <th>Nível</th>
             <th>Editar</th>
           </tr>
         </thead>
@@ -41,6 +42,7 @@
               <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.nome }}</a></td>
               <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.email }}</a></td>
               <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.telefone }}</a></td>
+              <td><a class="listaAdm" href="/editarUsuario/{{ usuario.id }}">{{ usuario.nivel }}</a></td>
               <td><a class="botaoExcluir" href="/editarUsuario/{{ usuario.id }}"><i class="fa-solid fa-pencil"></i></a></td>
             </tr>
           </ng-container>

@@ -2,11 +2,11 @@
   <div class="container row mx-auto">
     <div class="col-md-9 align-self-center">
       <p class="titulo">
-        {{ isAdmin ? 'Turmas' : (isDiscipulador ? 'Minhas turmas' : '') }}
+        {{ userService.isAdmin ? 'Turmas' : (userService.isDiscipulador ? 'Minhas turmas' : 'Outras turmas') }}
       </p>
     </div>
-    <div class="col-md-3 align-self-center">
-      <i class="fa-regular fa-plus"></i><a href="/cadastrarEditarMeusDiscipulado" class="add">Adicionar Discipulado</a>
+    <div class="col-md-3 align-self-center" *ngIf="!userService.isDiscipulo">
+      <i class="fa-regular fa-plus"></i><a href="/cadastrarEditarMeusDiscipulado" class="add">Adicionar Turma</a>
     </div>
   </div>
 
@@ -16,7 +16,7 @@
       <input
         type="search"
         class="form-control me-2"
-        placeholder="Digite o nome de quem procura"
+        placeholder="Digite o nome da turma que procura"
         autofocus
         [(ngModel)]="filtroNome"
         (keyup)="pesquisarDiscipulado($event)"
@@ -31,16 +31,22 @@
       <div class="card-header">
         <h3 class="discipulado-title">
           <a [routerLink]="['/cadastrarEditarMeusDiscipulado', turma.id]">
-            {{ turma.discipulado_nome }}
+            {{ turma.nome_turma }}
+          </a>
+        </h3>
+        <h3 class="discipulado-subtitle">
+          <a [routerLink]="['/cadastrarEditarMeusDiscipulado', turma.id]">
+            Discipulado: {{ turma.discipulado_nome }}
           </a>
         </h3>
         <div class="card-subtitle">
-          <div class="discipulador-tag" *ngIf="isAdmin">
+          <div class="discipulador-tag" *ngIf="userService.isAdmin">
             <i class="fa-solid fa-chalkboard-user"></i> {{ turma.discipulador_nome }}
           </div>
           <div class="turma-tag">
             <i class="fa-solid fa-users"></i> {{ turma.alunos?.length }} alunos
           </div>
+          <br>
           <div class="status-finished" *ngIf="turma.data_fim && turma.data_fim !== '1900-01-01'; else emAndamento">
             <i class="fa-solid fa-check-circle"></i> Finalizado
           </div>
@@ -84,7 +90,7 @@
 
 <ng-template #semDiscipulado>
   <div class="ff-inter centralizar">
-    <p>Não há nenhum discipulado cadastrado</p>
+    <p>Não há nenhuma turma cadastrada</p>
   </div>
 </ng-template>
 

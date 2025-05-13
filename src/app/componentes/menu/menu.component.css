@@ -8,7 +8,8 @@
 }
 
 .navbar {
-  background: #6bc04f !important;
+  /* background: #6bc04f !important; */
+  background: url(/assets/imagens/fundo-cabecalho.png);
 }
 
 

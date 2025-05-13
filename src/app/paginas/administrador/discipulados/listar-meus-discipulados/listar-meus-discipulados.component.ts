@@ -16,29 +16,23 @@ export class ListarMeusDiscipuladosComponent implements OnInit {
   totalPaginas: number = 1;
   itensPorPagina: number = 10;
   filtroNome: string = ''
-  cliente: string = 'True'
-  nivel: string = 'False'
-  isAdmin: boolean = false;
-  isDiscipulador: boolean = false;
+  // cliente: string = 'True'
+  // nivel: string = 'False'
 
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private service: DiscipuladoService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    const role = this.userService.retornarUserRole();
-    this.isAdmin = role === 'admin';
-    this.isDiscipulador = role === 'discipulador';
-
     this.carregarDiscipulados()
   }
 
   carregarDiscipulados(){
     let id = this.userService.retornarId();
 
-    if(this.isAdmin){
+    if(this.userService.isAdmin){
       id = null
     }
     this.service.listarTurma(this.filtroNome, id).subscribe((response) => {
@@ -93,15 +87,15 @@ export class ListarMeusDiscipuladosComponent implements OnInit {
     //     this.cliente = target.value;
     //   } else
     // } else
-    if (target.id === 'nivel') {
-        this.nivel = target.value;
-      }
+    // if (target.id === 'nivel') {
+    //     this.nivel = target.value;
+    //   }
 
       if (target.type === 'search') {
       this.filtroNome = target.value;
     }
 
-    this.service.pesquisarMeusDiscipulados(this.filtroNome, this.nivel)
+    this.service.pesquisarMeusDiscipulados(this.filtroNome, '')
       .subscribe(listaTodosDiscipulados => {
         this.listaTurma = listaTodosDiscipulados;
       });

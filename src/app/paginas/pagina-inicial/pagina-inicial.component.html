@@ -1,6 +1,6 @@
 
 <div class="container">
-  <div class="container row mx-auto" *ngIf="isDiscipulador || isAdmin">
+  <div class="container row mx-auto">  <!-- *ngIf="isDiscipulador || isAdmin" -->
     <div class="col-md-6 mb-4">
       <h3>Discipulados</h3>
       <a routerLink="/listarDiscipulados">
@@ -12,7 +12,7 @@
       </a>
     </div>
     <div class="col-md-6 mb-4">
-      <h3>{{ isAdmin ? 'Turmas' : (isDiscipulador ? 'Minhas turmas' : '') }}</h3>
+      <h3>{{ userService.isAdmin ? 'Turmas' : (userService.isDiscipulador ? 'Minhas turmas' : 'Outras turmas') }}</h3>
       <a routerLink="/listarMeusDiscipulados">
         <img
           src="../../../assets/imagens/professor.jpg"
@@ -31,12 +31,12 @@
           style="cursor: pointer;">
       </a>
     </div>
-    <div class="col-md-6 mb-4"  *ngIf="isAdmin">
+    <div class="col-md-6 mb-4">  <!--   *ngIf="isAdmin"> -->
       <h3>Igrejas Parceiras</h3>
       <a routerLink="/listarIgrejas">
         <img
           src="../../../assets/imagens/igreja.png"
-          class="img-fluid rounded img-custom-ipb"
+          class="img-fluid rounded img-custom"
           alt="Logo Igreja Presbiteriana"
           style="cursor: pointer;">
       </a>

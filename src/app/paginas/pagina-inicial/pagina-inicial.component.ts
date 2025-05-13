@@ -10,18 +10,11 @@ import { environment } from 'src/environments/environment';
 })
 export class PaginaInicialComponent implements OnInit {
 
-  isDiscipulador: boolean = false;
-  isDiscipulo: boolean = false;
-  isAdmin: boolean = false;
-
   constructor(
-    private userService: UserService
+    public userService: UserService
   ) { }
 
   ngOnInit(): void {
-    const role = this.userService.retornarUserRole();
-    this.isDiscipulador = role === 'discipulador';
-    this.isDiscipulo = role === 'discipulo';
-    this.isAdmin = role === 'admin';
+
   }
 }

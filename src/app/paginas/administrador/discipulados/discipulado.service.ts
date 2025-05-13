@@ -30,7 +30,7 @@ export class DiscipuladoService {
     }
 
 
-    const url = `${this.API}/`
+    const url = `${this.API_LISTA}/`
     return this.http.get<Discipulado[]>(url, {params})
   }
 
@@ -77,7 +77,7 @@ export class DiscipuladoService {
     }
 
 
-    const url = `${this.API_LISTA}/`
+    const url = `${this.API_LISTA_TURMA}/`
     return this.http.get<TurmaDiscipulado[]>(url, {params})
   }
 

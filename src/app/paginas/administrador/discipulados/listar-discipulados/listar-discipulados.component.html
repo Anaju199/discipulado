@@ -1,4 +1,4 @@
-<div class="container row mx-auto">
+<!-- <div class="container row mx-auto">
     <div class="container row mx-auto">
       <div class="col-md-9 align-self-center">
         <p class="titulo">
@@ -61,10 +61,74 @@
       <br/>
     </div>
   </div>
-  
-  <ng-template #semDiscipulado>
+   -->
+   <div class="container row mx-auto">
+    <div class="col-md-12">
+      <div class="container row mx-auto">
+        <div class="col-md-9 align-self-center">
+          <p class="titulo">
+            Discipulados
+          </p>
+        </div>
+        <div class="col-md-3 align-self-center" *ngIf="userService.isAdmin || userService.isDiscipulador">
+          <i class="fa-regular fa-plus"></i><a href="/cadastrarEditarDiscipulado" class="add"> Adicionar Discipulado</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 align-self-center">
+          <label style="margin-left: 5px;" for="adm">Pesquisar</label>
+          <div class="d-flex" role="search">
+            <input
+              type="search"
+              class="form-control me-2"
+              placeholder="Digite o nome do discipulado que procura"
+              autofocus
+              [(ngModel)]="filtroNome"
+              (keyup)="pesquisarDiscipulado($event)"
+            >
+          </div>
+        </div>
+        <div class="col-md-2 align-self-center">
+          <label style="margin-left: 5px;" for="nivel">Nivel</label>
+          <select class="form-select" id="nivel" aria-label="Nivel" (change)="pesquisarDiscipulado($event)">
+            <option selected value="">Escolha um nivel</option>
+            <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mural" *ngIf="listaDiscipulados.length > 0; else semDiscipulado">
+        <div class="card-mural" *ngFor="let discipulado of listaDiscipulados">
+
+          <!-- Clique habilitado para admin ou discipulador -->
+          <ng-container *ngIf="userService.isAdmin || userService.isDiscipulador; else semPermissao">
+            <a [routerLink]="['/cadastrarEditarDiscipulado', discipulado.id]" style="cursor: pointer;">
+              <img [src]="discipulado.foto" class="img-fluid rounded img-custom-capa" alt="Discipulados">
+            </a>
+            <a [routerLink]="['/cadastrarEditarDiscipulado', discipulado.id]" style="cursor: pointer;">
+              <h5 class="texto">{{ discipulado.nome }}</h5>
+            </a>
+          </ng-container>
+
+          <!-- Imagem sem link para usuários sem permissão -->
+          <ng-template #semPermissao>
+            <div class="card-link disabled-link">
+              <img [src]="discipulado.foto" class="img-fluid rounded img-custom-capa" alt="Discipulados">
+              <h5 class="">{{ discipulado.nivel }}</h5>
+              <h5 class="texto">{{ discipulado.nome }}</h5>
+            </div>
+          </ng-template>
+
+          <p>Próximo estudo: {{ discipulado.proximoEstudo }}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+   <ng-template #semDiscipulado>
     <div class="ff-inter centralizar">
       <p>Não há nenhuma discipulado cadastrado</p>
     </div>
   </ng-template>
-  
