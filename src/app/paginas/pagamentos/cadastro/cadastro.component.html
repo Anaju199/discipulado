@@ -34,7 +34,7 @@
         E-mail é Obrigatório!
       </div>
 
-      
+
       <!-- Campo obrigatório para compras-->
       <label for="telefone">Telefone</label>
       <input
@@ -45,7 +45,7 @@
         formControlName="telefone"
         placeholder="3199999999"
       >
-      
+
       <label for="igreja">Igrejas</label>
       <div *ngIf="igrejas">
         <select class="select" id="igreja" aria-label="Selecione a igreja" formControlName="igreja">
@@ -54,28 +54,34 @@
         </select>
       </div>
 
-      <div class="col-md-6">
-        <input id="discipulador" type="checkbox" formControlName="discipulador" [checked]="false" selected />
-        <label class="campo__check" for="discipulador">Discipulador</label>
-      </div>
-      <br/>
+      <div *ngIf="isDiscipulador || isAdmin">
 
-      <div>
-        <label for="nivel">
-          {{ formulario.get('discipulador')?.value ? 'Nível que irá discipular' : 'Nível do discípulo' }}
-        </label>
-        <div *ngIf="niveis">
-          <select class="select" id="nivel" aria-label="Selecione o nível" formControlName="nivel">
-            <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
-          </select>
+        <div class="col-md-6">
+          <input id="discipulador" type="checkbox" formControlName="discipulador" [checked]="false" selected />
+          <label class="campo__check" for="discipulador">Discipulador</label>
         </div>
+        <br/>
+
+        <div>
+          <label for="nivel">
+            {{ formulario.get('discipulador')?.value ? 'Nível que irá discipular' : 'Nível do discípulo' }}
+          </label>
+          <div *ngIf="niveis">
+            <select class="select" id="nivel" aria-label="Selecione o nível" formControlName="nivel">
+              <option *ngFor="let nivel of niveis" [value]="nivel">{{ nivel }}</option>
+            </select>
+          </div>
+        </div>
+
       </div>
-      
-      <div class="col-md-6">
-        <input id="administrador" type="checkbox" formControlName="administrador" [checked]="false" selected />
-        <label class="campo__check" for="administrador">Administrador</label>
+      <div *ngIf="isAdmin">
+        <div class="col-md-6">
+          <input id="administrador" type="checkbox" formControlName="administrador" [checked]="false" selected />
+          <label class="campo__check" for="administrador">Administrador</label>
+        </div>
+        <br/>
       </div>
-      <br/>
+
     </div>
 
     <div *ngIf="cadastro || alterarSenha">
@@ -113,20 +119,14 @@
     <div class="d-flex flex-column align-items-center">
       <div class="d-flex flex-wrap gap-3">
         <button
-        [disabled]="!formulario.valid"
         (click)="id ? editar() : cadastrar()"
         [ngClass]="habilitarBotao()"
         id="btnSalvar"
         >Salvar
       </button>
-      <button (click)="cancelar()" class="botao_forms">Voltar para usuários</button>
+      <button (click)="irPara()" class="botao_forms">Voltar para usuários</button>
     </div>
     <br/>
-    <!-- <div *ngIf="!id">
-      <p>Já tem cadastro?
-        <a style="color: black;" routerLink="/login"><u>Faça login!</u></a>
-      </p>
-    </div> -->
     <div *ngIf="id && !alterarSenha">
       <p>Deseja
         <a style="color: black;" [routerLink]="['/alterarSenha', id]" [queryParams]="{ alterarSenha: true }"><u>alterar a senha?</u></a>

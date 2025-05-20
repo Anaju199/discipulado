@@ -2,6 +2,9 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { DiscipuladoService } from '../discipulado.service';
 import { Discipulado } from 'src/app/paginas/pagamentos/tipos';
+import { UserService } from 'src/app/paginas/pagamentos/services/user.service';
+import { environment } from 'src/environments/environment';
+import { CadastroService } from 'src/app/paginas/pagamentos/services/cadastro.service';
 
 @Component({
   selector: 'app-listar-discipulados',
@@ -16,14 +19,28 @@ export class ListarDiscipuladosComponent implements OnInit {
   itensPorPagina: number = 10;
   filtroNome: string = ''
   cliente: string = 'True'
-  nivel: string = 'False'
+  nivel: string = ''
+  niveis: string[] = [];
+
+  link: string = environment.urlImagem
 
   constructor(
+    public userService: UserService,
     private service: DiscipuladoService,
+    private cadastroService: CadastroService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.cadastroService.listarNiveis().subscribe(
+      niveis => {
+        this.niveis = niveis;
+      },
+      error => {
+        console.error('Erro ao recuperar niveis:', error);
+      }
+    );
+
     this.carregarDiscipulados()
   }
 
@@ -34,29 +51,29 @@ export class ListarDiscipuladosComponent implements OnInit {
     })
   }
 
-  proximaPagina(): void {
-    if (this.paginaAtual < this.totalPaginas) {
-      this.paginaAtual++;
-      this.carregarDiscipulados();
-    }
-  }
+  // proximaPagina(): void {
+  //   if (this.paginaAtual < this.totalPaginas) {
+  //     this.paginaAtual++;
+  //     this.carregarDiscipulados();
+  //   }
+  // }
 
-  paginaAnterior(): void {
-    if (this.paginaAtual > 1) {
-      this.paginaAtual--;
-      this.carregarDiscipulados();
-    }
-  }
+  // paginaAnterior(): void {
+  //   if (this.paginaAtual > 1) {
+  //     this.paginaAtual--;
+  //     this.carregarDiscipulados();
+  //   }
+  // }
 
-  habilitarBotao(direcao: string): string {
-    if (direcao === 'anterior' && this.paginaAtual === 1) {
-      return 'botao_pag_desabilitado';
-    }
-    if (direcao === 'proxima' && this.paginaAtual === this.totalPaginas) {
-      return 'botao_pag_desabilitado';
-    }
-    return 'botao_pag';
-  }
+  // habilitarBotao(direcao: string): string {
+  //   if (direcao === 'anterior' && this.paginaAtual === 1) {
+  //     return 'botao_pag_desabilitado';
+  //   }
+  //   if (direcao === 'proxima' && this.paginaAtual === this.totalPaginas) {
+  //     return 'botao_pag_desabilitado';
+  //   }
+  //   return 'botao_pag';
+  // }
 
   excluir(id: number) {
     if (confirm('Tem certeza que deseja excluir?')){
@@ -83,20 +100,27 @@ export class ListarDiscipuladosComponent implements OnInit {
     // if (target.type === 'select-one') {
     //   if (target.id === 'cliente') {
     //     this.cliente = target.value;
-    //   } else 
-    // } else 
-    if (target.id === 'nivel') {
-        this.nivel = target.value;
+    //   } else
+    // } else
+    if (target.type === 'select-one') {
+      if (target.id === 'nivel') {
+          this.nivel = target.value;
       }
-    
-      if (target.type === 'search') {
+    }
+
+    console.log('nuvl',this.nivel)
+
+    if (target.type === 'search') {
       this.filtroNome = target.value;
     }
 
-    this.service.listar(this.filtroNome, this.nivel)
+    this.service.listarDiscipulado(this.filtroNome, this.nivel)
       .subscribe(listaTodosDiscipulados => {
         this.listaDiscipulados = listaTodosDiscipulados;
       });
   }
+
+
+
 
 }

@@ -69,14 +69,3 @@ a:hover {
     padding: calc(var(--spacing-unit) / 2);
   }
 }
-
-.card-link {
-  width: 100%;
-  text-align: center;
-  padding: 1rem;
-}
-
-.disabled-link {
-  pointer-events: none;
-  opacity: 0.9;
-}

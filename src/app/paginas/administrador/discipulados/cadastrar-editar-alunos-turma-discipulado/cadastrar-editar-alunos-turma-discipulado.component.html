@@ -10,9 +10,9 @@
     <div class="column">
       <h3>Alunos Disponíveis</h3>
       <div class="students-list">
-        <div 
+        <div
           class="student-item"
-          *ngFor="let student of allStudents" 
+          *ngFor="let student of allStudents"
           [class.selected]="selectedStudents.includes(student)"
           (click)="toggleStudentSelection(student)">
           {{ student.nome }}
@@ -34,7 +34,7 @@
   </div>
 
   <div class="actions">
-    <button class="btn-save" (click)="saveChanges()">Salvar Alterações</button>
+    <button class="btn-save" (click)="atualizarAlunosDaTurma()">Salvar Alterações</button>
     <button class="btn-cancel" (click)="cancel()">Cancelar</button>
   </div>
 </div>

@@ -12,10 +12,12 @@ import { CadastroService } from 'src/app/paginas/pagamentos/services/cadastro.se
 })
 export class AlunoComponent implements OnInit {
 
-  cliente!: Usuario;
+  // cliente!: Usuario;
   filtroResposta: string = ''
   listaRespostas: Resposta[] = []
-  // id: number = 0
+  alunoNome: string = ''
+  turma: number = 0
+  discipulado: string = ''
 
   constructor(
     private service: CadastroService,
@@ -28,17 +30,23 @@ export class AlunoComponent implements OnInit {
 
     const id = this.route.snapshot.paramMap.get('id')
 
-    this.service.buscarPorId(parseInt(id!)).subscribe((cliente) => {
-      this.cliente = cliente
-    })
+    this.route.queryParams.subscribe(params => {
+      this.alunoNome = params['alunoNome'];
+      this.turma = params['turma'];
+      this.discipulado = params['discipulado'];
+    });
 
-    this.respostaService.listar(this.filtroResposta, parseInt(id!)).subscribe((listaRespostas) => {
+    // this.service.buscarPorId(parseInt(id!)).subscribe((cliente) => {
+    //   this.cliente = cliente
+    // })
+
+    this.respostaService.listar(this.filtroResposta, parseInt(id!), this.turma).subscribe((listaRespostas) => {
       this.listaRespostas = listaRespostas
     })
   }
 
   voltar() {
-    this.router.navigate(['/listarAlunos'])
+    this.router.navigate(['/listarMeusDiscipulados'])
   }
 
 }

@@ -21,7 +21,7 @@ export class CadastroService {
     if(filtroUsuario.trim().length > 0){
       params = params.set("nome",filtroUsuario)
     }
-    
+
     if(discipulador){
       params = params.set("discipulador","True")
     }

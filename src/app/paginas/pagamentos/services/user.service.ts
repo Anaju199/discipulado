@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TokenService } from './token.service';
 import jwt_decode from 'jwt-decode';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Usuario } from '../tipos';
 
@@ -13,13 +13,16 @@ export class UserService {
   private userSubject = new BehaviorSubject<Usuario | null>(null);
   id!: number;
 
-  constructor(private tokenService: TokenService, private http: HttpClient) {
+  constructor(
+    private tokenService: TokenService,
+    private http: HttpClient
+  ) {
     if (this.tokenService.possuiToken()) {
       this.decodificarJWT();
     }
   }
 
-  private decodificarJWT() {
+  private decodificarJWT(): void {
     const token = this.tokenService.retornarToken();
     if (token) {
       const user = jwt_decode(token) as Usuario;
@@ -31,16 +34,32 @@ export class UserService {
     return this.userSubject.asObservable();
   }
 
-  setUserRole(role: string) {
+  // ===================== ROLES =====================
+
+  setUserRole(role: string): void {
     localStorage.setItem('role', role);
   }
 
   retornarUserRole(): string {
-    // Lógica para retornar a função do usuário
-    return localStorage.getItem('role') || ''; // Exemplo: 'admin', 'user'
+    // Retorna o papel do usuário salvo localmente (ex: 'admin', 'discipulo', 'discipulador')
+    return localStorage.getItem('role') || '';
   }
 
-  setId(id: number) {
+  get isAdmin(): boolean {
+    return this.retornarUserRole() === 'admin';
+  }
+
+  get isDiscipulo(): boolean {
+    return this.retornarUserRole() === 'discipulo';
+  }
+
+  get isDiscipulador(): boolean {
+    return this.retornarUserRole() === 'discipulador';
+  }
+
+  // ===================== DADOS DO USUÁRIO =====================
+
+  setId(id: number): void {
     localStorage.setItem('id', id.toString());
   }
 
@@ -48,7 +67,7 @@ export class UserService {
     return localStorage.getItem('id');
   }
 
-  setNome(nome: string) {
+  setNome(nome: string): void {
     localStorage.setItem('nome', nome);
   }
 
@@ -56,7 +75,7 @@ export class UserService {
     return localStorage.getItem('nome');
   }
 
-  setNivel(nivel: string) {
+  setNivel(nivel: string): void {
     localStorage.setItem('nivel', nivel);
   }
 
@@ -64,24 +83,25 @@ export class UserService {
     return localStorage.getItem('nivel');
   }
 
-  salvarToken(token: string) {
+  // ===================== TOKEN =====================
+
+  salvarToken(token: string): void {
     this.tokenService.salvarToken(token);
     this.decodificarJWT();
   }
 
-  // salvarTokenApi(token: string) {
-  //   this.tokenService.salvarTokenApi(token);
-  // }
+  // ===================== AUTENTICAÇÃO =====================
 
-  logout() {
+  logout(): void {
     this.tokenService.excluirToken();
     this.userSubject.next(null);
-    localStorage.removeItem('nome')
-    localStorage.removeItem('id')
-    localStorage.removeItem('role')
+    localStorage.removeItem('nome');
+    localStorage.removeItem('id');
+    localStorage.removeItem('role');
+    localStorage.removeItem('nivel');
   }
 
-  estaLogado() {
+  estaLogado(): boolean {
     return this.tokenService.possuiToken();
   }
 }

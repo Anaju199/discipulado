@@ -1,12 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\src",
-    "\\src\\app",
-    "\\src\\app\\paginas",
-    "\\src\\app\\paginas\\administrador",
-    "\\src\\app\\paginas\\administrador\\discipulados",
-    "\\src\\app\\paginas\\administrador\\discipulados\\listar-meus-discipulados"
+    ""
   ],
   "PreviewInSolutionExplorer": false
 }

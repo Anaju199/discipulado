@@ -1,0 +1,26 @@
+<div class="container row mx-auto">
+  <div class="col-md-12">
+    <h3>Meus discipulados</h3>
+    <div class="mural" *ngIf="listaDiscipulados.length > 0; else semDiscipulados">
+      <div class="card-mural" *ngFor="let discipulado of listaDiscipulados">
+        <a (click)="irParaQuestionario(discipulado.id, discipulado.licao, discipulado.nome, turma[0].id)" style="cursor: pointer;">
+          <img
+            [src]="link + discipulado.foto"
+            class="img-fluid rounded img-custom-capa"
+            alt="Discipulados">
+        </a>
+        <a (click)="irParaQuestionario(discipulado.id, discipulado.licao, discipulado.nome, turma[0].id)" style="cursor: pointer;">
+          <h5 class="texto">{{ turma[0].nome_turma }} - {{ discipulado.nome }}</h5>
+        </a>
+        <p>Próximo estudo: {{ discipulado.proximoEstudo }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #semDiscipulados>
+  <div class="ff-inter centralizar">
+    <p>Você não é aluno de nenhum discipulado.</p>
+  </div>
+</ng-template>

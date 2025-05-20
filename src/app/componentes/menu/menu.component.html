@@ -8,24 +8,30 @@
         <li class="nav-item ff-inter">
           <a class="nav-link active" aria-current="page" href="#">Página Inicial</a>
         </li>
-        <li class="nav-item ff-inter">
+        <!-- <li class="nav-item ff-inter">
           <a class="nav-link" href="/sobreMim">Sobre Mim</a>
+        </li> -->
+        <ng-container>
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/listarDiscipulados">Discipulados</a>
+          </li>
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/listarMeusDiscipulados">
+              {{ isAdmin ? 'Turmas' : (isDiscipulador ? 'Minhas turmas' : '') }}
+            </a>
+          </li>
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/listarUsuarios">Usuários</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="isAdmin">
+          <li class="nav-item ff-inter">
+            <a class="nav-link" href="/listarIgrejas">Igrejas Parceiras</a>
+          </li>
+        </ng-container>
+        <li class="nav-item ff-inter">
+          <a class="nav-link" href="/meusDiscipulados">Meus discipulados</a>
         </li>
-        <ng-container *ngIf="isAdmin">
-          <li class="nav-item ff-inter">
-            <a class="nav-link" href="/clientes">Clientes</a>
-          </li>
-        </ng-container>
-        <ng-container *ngIf="isAdmin">
-          <li class="nav-item ff-inter">
-            <a class="nav-link" href="/listarPerguntas">Perguntas</a>
-          </li>
-        </ng-container>
-        <ng-container *ngIf="isUser">
-          <li class="nav-item ff-inter">
-            <a class="nav-link" href="/questionario">Questionário</a>
-          </li>
-        </ng-container>
       </ul>
     </div>
     <ng-container *ngIf="user$ | async as Usuario, else login">
@@ -35,7 +41,7 @@
           Olá {{nome}}
         </a>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item text-start" href="/editarCliente/{{ id }}">Meu perfil</a></li>
+          <li><a class="dropdown-item text-start" href="/editarUsuario/{{ id }}">Meu perfil</a></li>
           <li><a class="dropdown-item text-start" [routerLink]="['/alterarSenha', id]" [queryParams]="{ alterarSenha: true }">Alterar Senha</a></li>
         </ul>
       </li>

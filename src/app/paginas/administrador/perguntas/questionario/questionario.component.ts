@@ -6,6 +6,8 @@ import { Pergunta, Resposta } from './questionario';
 import { RespostaService } from './resposta.service';
 import { UserService } from '../../../pagamentos/services/user.service';
 import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-questionario',
@@ -17,13 +19,14 @@ export class QuestionarioComponent implements OnInit {
   id?: number;
   formulario!: FormGroup;
   perguntas: Pergunta[] = [];
-  ano: number = new Date().getFullYear();
   paginaAtual: number = 1;
   totalPaginas: number = 1;
   itensPorPagina: number = 10;
   listaRespostas: Resposta[] = [];
   usuarioId = this.userService.retornarId();
   licao: string = ''
+  discipuladoNome: string = ''
+  turma: any
 
   constructor(
     private perguntaService: PerguntaService,
@@ -36,7 +39,9 @@ export class QuestionarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.licao = params['licao']; 
+      this.licao = params['licao'];
+      this.discipuladoNome = params['discipuladoNome'];
+      this.turma = params['turma'];
     });
 
     this.formulario = this.formBuilder.group({
@@ -85,33 +90,48 @@ export class QuestionarioComponent implements OnInit {
 
   criarResposta() {
     if (this.formulario.valid) {
-
-      // Mapeia as respostas no formato correto
       const respostas: Resposta[] = this.formulario.value.perguntas.map((item: any) => {
         return {
-          id: null, // O ID da resposta será gerado no backend
-          usuario: this.usuarioId, // ID do usuário
-          pergunta: item.id, // Apenas o ID da pergunta
-          resposta: item.resposta // Resposta fornecida pelo usuário
+          id: null,
+          usuario: this.usuarioId,
+          turma: this.turma,
+          pergunta: item.id,
+          resposta: item.resposta
         };
       });
 
-      // Cria um array de requisições HTTP
-      const requisicoes = respostas.map((resposta: Resposta) => this.service.criar(resposta));
+      // Para cada resposta, verifica se já existe
+      const requisicoes = respostas.map(resposta => {
+        return this.service
+          .buscarResposta(resposta.usuario, resposta.turma, resposta.pergunta)
+          .pipe(
+            switchMap(respostaExistente => {
+              if (respostaExistente) {
+                resposta.id = respostaExistente.id;
+                return this.service.editar(resposta);
+              } else {
+                // Cria nova
+                return this.service.criar(resposta);
+              }
+            })
+          );
+      });
 
-      // Aguarda todas as requisições serem finalizadas
+      // Executa todas
       forkJoin(requisicoes).subscribe(() => {
-        alert('Respostas cadastradas com sucesso.');
+        alert('Respostas processadas com sucesso.');
         this.router.navigate(['/paginaInicial']);
       }, error => {
-        console.error('Erro ao cadastrar respostas:', error);
-        alert('Não foi possível cadastrar, entre em contato com o administrador.');
+        const firstErrorField = Object.keys(error.error)[0];
+        const errorMessage = error.error[firstErrorField][0];
+        alert(`Erro no campo ${firstErrorField}: ${errorMessage}`);
       });
     } else {
-      this.formulario.markAllAsTouched(); // Marcar todos os campos como tocados para exibir erros
+      this.formulario.markAllAsTouched();
       alert('Formulário Inválido');
     }
   }
+
 
   cancelar() {
     this.router.navigate(['/listarPerguntas']);
@@ -119,7 +139,7 @@ export class QuestionarioComponent implements OnInit {
 
   verificaResposta(usuarioId: string): Promise<Resposta[]> {
     return new Promise((resolve) => {
-      this.service.listar('', parseInt(usuarioId!)).subscribe((listaRespostas) => {
+      this.service.listar('', parseInt(usuarioId!), 0).subscribe((listaRespostas) => {
         this.listaRespostas = listaRespostas;
         resolve(this.listaRespostas); // Resolve com as respostas existentes
       });

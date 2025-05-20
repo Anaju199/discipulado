@@ -21,6 +21,7 @@ export class CadastroComponent implements OnInit {
   formulario!: FormGroup;
   formularioEndereco!: FormGroup;
   isAdmin: boolean = false;
+  isDiscipulador: boolean = false;
   titulo: string = 'Digite os dados para cadastro:'
   niveis: string[] = []
   igrejas: Igreja[] = []
@@ -36,8 +37,9 @@ export class CadastroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // const role = this.userService.retornarUserRole();
-    // this.isAdmin = role === 'admin';
+    const role = this.userService.retornarUserRole();
+    this.isAdmin = role === 'admin';
+    this.isDiscipulador = role === 'discipulador';
 
     this.route.queryParams.subscribe(params => {
       this.alterarSenha = params['alterarSenha'] === 'true';  // Verifica se alterarSenha é 'true'
@@ -52,10 +54,7 @@ export class CadastroComponent implements OnInit {
         Validators.required,
         Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")
       ])],
-      telefone: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(8)
-      ])],
+      telefone: [''],
       senha: ['', Validators.compose([
         Validators.required
       ])],
@@ -87,10 +86,7 @@ export class CadastroComponent implements OnInit {
             Validators.required,
             Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")
           ])],
-          telefone: [discipulo.telefone, Validators.compose([
-            Validators.required,
-            Validators.minLength(8)
-          ])],
+          telefone: [discipulo.telefone],
           senha: [this.alterarSenha ? '' : discipulo.senha, Validators.compose([
             Validators.required
           ])],
@@ -110,9 +106,9 @@ export class CadastroComponent implements OnInit {
       niveis => {
         this.niveis = niveis;
     }, error => {
-      const firstErrorField = Object.keys(error.error)[0]; 
-      const errorMessage = error.error[firstErrorField][0]; 
-      
+      const firstErrorField = Object.keys(error.error)[0];
+      const errorMessage = error.error[firstErrorField][0];
+
       alert(`Erro no campo ${firstErrorField}: ${errorMessage}`);
     });
 
@@ -120,9 +116,9 @@ export class CadastroComponent implements OnInit {
       igrejas => {
         this.igrejas = igrejas;
     }, error => {
-      const firstErrorField = Object.keys(error.error)[0]; 
-      const errorMessage = error.error[firstErrorField][0]; 
-      
+      const firstErrorField = Object.keys(error.error)[0];
+      const errorMessage = error.error[firstErrorField][0];
+
       alert(`Erro no campo ${firstErrorField}: ${errorMessage}`);
     });
   }
@@ -140,21 +136,26 @@ export class CadastroComponent implements OnInit {
       formData.append('nivel', this.formulario.get('nivel')!.value);
       formData.append('discipulador', this.formulario.get('discipulador')!.value);
       formData.append('igreja', this.formulario.get('igreja')!.value);
-  
+
       this.service.criar(formData).subscribe(() => {
         alert('Cadastro realizado com sucesso.');
-        this.router.navigate(['/listarUsuarios']);
+        this.irPara()
       }, error => {
-        const firstErrorField = Object.keys(error.error)[0]; 
-        const errorMessage = error.error[firstErrorField][0]; 
-        
+        const firstErrorField = Object.keys(error.error)[0];
+        const errorMessage = error.error[firstErrorField][0];
+
         alert(`Erro no campo ${firstErrorField}: ${errorMessage}`);
       });
     } else {
+      this.formulario.markAllAsTouched();
+      const firstInvalidControl = document.querySelector('.ng-invalid');
+      if (firstInvalidControl) {
+        (firstInvalidControl as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
       alert('Formulário Inválido');
     }
   }
-  
+
 
   editar() {
     if (this.formulario.valid) {
@@ -171,14 +172,20 @@ export class CadastroComponent implements OnInit {
       const id = this.formulario.get('id')!.value;
       this.service.editar(id, formData).subscribe(() => {
         alert('Edição realizada com sucesso.');
-        this.router.navigate(['/listarUsuarios']);
+        this.irPara();
       }, error => {
-        const firstErrorField = Object.keys(error.error)[0]; 
-        const errorMessage = error.error[firstErrorField][0]; 
-        
+        const firstErrorField = Object.keys(error.error)[0];
+        const errorMessage = error.error[firstErrorField][0];
+
         alert(`Erro no campo ${firstErrorField}: ${errorMessage}`);
       });
     } else {
+      this.formulario.markAllAsTouched();
+      const firstInvalidControl = document.querySelector('.ng-invalid');
+      if (firstInvalidControl) {
+        (firstInvalidControl as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
       alert('Formulário Inválido');
     }
   }
@@ -194,8 +201,12 @@ export class CadastroComponent implements OnInit {
     }
   }
 
-  cancelar() {
-    this.router.navigate(['/listarUsuarios'])
+  irPara() {
+    if(this.isAdmin){
+      this.router.navigate(['/listarUsuarios'])
+    } else {
+      this.router.navigate(['/paginaInicial'])
+    }
   }
 
   habilitarBotao(): string {
@@ -206,13 +217,13 @@ export class CadastroComponent implements OnInit {
     }
   }
 
-  
+
   validarCPF(cpf: string): boolean {
     cpf = cpf.replace(/[^\d]+/g, '');
     if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) {
       return false;
     }
-  
+
     const calcDigito = (base: number) => {
       let soma = 0;
       for (let i = 0; i < base; i++) {
@@ -221,10 +232,10 @@ export class CadastroComponent implements OnInit {
       const resto = soma % 11;
       return resto < 2 ? 0 : 11 - resto;
     };
-  
+
     const digito1 = calcDigito(9);
     const digito2 = calcDigito(10);
-  
+
     return digito1 === +cpf[9] && digito2 === +cpf[10];
   }
 

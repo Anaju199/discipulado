@@ -11,37 +11,33 @@ import { UserService } from 'src/app/paginas/pagamentos/services/user.service';
 })
 export class ListarMeusDiscipuladosComponent implements OnInit {
 
-  listaDiscipulados: TurmaDiscipulado[] = [];
+  listaTurma: TurmaDiscipulado[] = [];
   paginaAtual: number = 1;
   totalPaginas: number = 1;
   itensPorPagina: number = 10;
   filtroNome: string = ''
-  cliente: string = 'True'
-  nivel: string = 'False'
-  isAdmin: boolean = false;
+  // cliente: string = 'True'
+  // nivel: string = 'False'
 
   constructor(
-    private userService: UserService,
+    public userService: UserService,
     private service: DiscipuladoService,
     private router: Router
-  ) {
-    // Check if user is admin - you might want to get this from a user service or localStorage
-    const userData = localStorage.getItem('usuario');
-    if (userData) {
-      const user = JSON.parse(userData);
-      this.isAdmin = user.administrador || false;
-    }
-  }
+  ) { }
 
   ngOnInit(): void {
     this.carregarDiscipulados()
   }
 
   carregarDiscipulados(){
-    this.service.listarMeusDiscipulados(this.paginaAtual, this.itensPorPagina).subscribe((response) => {
-        this.listaDiscipulados = response.results
-        this.totalPaginas = Math.ceil(response.count/this.itensPorPagina)
-      })  
+    let id = this.userService.retornarId();
+
+    if(this.userService.isAdmin){
+      id = null
+    }
+    this.service.listarTurma(this.filtroNome, id).subscribe((response) => {
+        this.listaTurma = response
+      })
   }
 
   proximaPagina(): void {
@@ -89,19 +85,19 @@ export class ListarMeusDiscipuladosComponent implements OnInit {
     // if (target.type === 'select-one') {
     //   if (target.id === 'cliente') {
     //     this.cliente = target.value;
-    //   } else 
-    // } else 
-    if (target.id === 'nivel') {
-        this.nivel = target.value;
-      }
-    
+    //   } else
+    // } else
+    // if (target.id === 'nivel') {
+    //     this.nivel = target.value;
+    //   }
+
       if (target.type === 'search') {
       this.filtroNome = target.value;
     }
 
-    this.service.pesquisarMeusDiscipulados(this.filtroNome, this.nivel)
+    this.service.pesquisarMeusDiscipulados(this.filtroNome, '')
       .subscribe(listaTodosDiscipulados => {
-        this.listaDiscipulados = listaTodosDiscipulados;
+        this.listaTurma = listaTodosDiscipulados;
       });
   }
 

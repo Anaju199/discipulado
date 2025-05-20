@@ -13,18 +13,21 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
   turmaId: number = 0;
   turma?: TurmaDiscipulado;
-  allStudents: Usuario[] = [];
-  turmaStudents: Usuario[] = [];
+  allStudents: any[] = [];
+  allStudentsOriginal: any[] = [];
+
+  turmaStudents: any[] = [];
+  turmaStudentsOriginal: any[] = [];
   searchText: string = '';
   selectedStudents: any[] = [];
-  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private discipuladoService: DiscipuladoService,
     private cadastroService: CadastroService
   ) { }
-  
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -34,19 +37,19 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
       this.router.navigate(['/listarMeusDiscipulados']);
     }
   }
-  
+
   loadTurma() {
-    this.discipuladoService.buscarMeusDiscipulado(this.turmaId).subscribe(
+    this.discipuladoService.buscarTurmaDiscipulado(this.turmaId).subscribe(
       (turma) => {
         console.log('Turma loaded:', turma);
         this.turma = turma;
-  
+
         // Carregar todos os estudantes
         this.cadastroService.listar('', false).subscribe(
           (students) => {
             console.log('All students loaded:', students);
             this.allStudents = students;
-  
+
             // Pegar os alunos da turma com base no ID do discipulo
             if (turma.alunos && turma.alunos.length > 0) {
               this.turmaStudents = turma.alunos.map(alunoTurma => {
@@ -56,11 +59,14 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
             } else {
               this.turmaStudents = [];
             }
-  
+
             // Remover alunos da lista geral que já estão na turma
-            this.allStudents = this.allStudents.filter(student => 
+            this.allStudents = this.allStudents.filter(student =>
               !this.turmaStudents.find(turmaStudent => turmaStudent.id === student.id)
             );
+
+            this.allStudentsOriginal = [...this.allStudents];
+            this.turmaStudentsOriginal = [...this.turmaStudents];
           },
           (error) => {
             console.error('Error loading students:', error);
@@ -75,7 +81,7 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
       }
     );
   }
-  
+
   drop(event: CdkDragDrop<Usuario[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -88,7 +94,7 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
       );
     }
   }
-  
+
   addToTurma(student: Usuario) {
     const index = this.allStudents.indexOf(student);
     if (index > -1) {
@@ -96,7 +102,7 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
       this.turmaStudents.push(student);
     }
   }
-  
+
   removeFromTurma(student: Usuario) {
     const index = this.turmaStudents.indexOf(student);
     if (index > -1) {
@@ -104,54 +110,43 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
       this.allStudents.push(student);
     }
   }
-  
+
   filterStudents() {
     const searchLower = this.searchText.toLowerCase().trim();
-  
+
     if (!searchLower) {
-      this.allStudents = [...this.allStudents];
-      this.turmaStudents = [...this.turmaStudents];
+      this.allStudents = [...this.allStudentsOriginal];
+      this.turmaStudents = [...this.turmaStudentsOriginal];
       return;
     }
-  
-    this.allStudents = this.allStudents.filter(
+
+    this.allStudents = this.allStudentsOriginal.filter(
       student => student.nome.toLowerCase().includes(searchLower)
     );
-  
-    this.turmaStudents = this.turmaStudents.filter(
+
+    this.turmaStudents = this.turmaStudentsOriginal.filter(
       student => student.nome.toLowerCase().includes(searchLower)
     );
   }
-  
-  saveChanges() {
-    if (!this.turma) return;
-  
-    const formData = new FormData();
-    formData.append('nome_turma', this.turma.nome_turma);
-    formData.append('discipulador', this.turma.discipulador.id.toString());
-    formData.append('discipulado', this.turma.discipulado.id.toString());
-    formData.append('data_inicio', this.turma.data_inicio);
-    formData.append('data_fim', this.turma.data_fim);
-  
-    this.turmaStudents.forEach((student, index) => {
-      formData.append(`alunos[${index}]`, student.id.toString());
+
+  atualizarAlunosDaTurma() {
+    this.discipuladoService.excluirTodosAlunosTurmaDiscipulado(this.turmaId).subscribe(() => {
+      this.turmaStudents.forEach((student) => {
+        const alunoData = {
+          turma: this.turmaId,
+          discipulo: student.id
+        };
+        this.discipuladoService.criarAlunoTurmaDiscipulado(alunoData).subscribe();
+      });
+      alert('Alunos atualizados com sucesso!');
+      this.router.navigate(['/listarMeusDiscipulados']);
     });
-  
-    this.discipuladoService.editarTurmaDiscipulado(this.turmaId, formData).subscribe(
-      () => {
-        alert('Alunos atualizados com sucesso!');
-        this.router.navigate(['/listarMeusDiscipulados']);
-      },
-      (error) => {
-        alert('Erro ao atualizar alunos');
-      }
-    );
   }
-  
+
   cancel() {
     this.router.navigate(['/listarMeusDiscipulados']);
   }
-  
+
   toggleStudentSelection(student: any) {
     const index = this.selectedStudents.indexOf(student);
     if (index >= 0) {
@@ -160,7 +155,7 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
       this.selectedStudents.push(student);
     }
   }
-  
+
   addSelectedStudents() {
     this.selectedStudents.forEach(student => {
       if (!this.turmaStudents.includes(student)) {
@@ -173,7 +168,7 @@ export class CadastrarEditarAlunosTurmaDiscipuladoComponent implements OnInit {
     });
     this.selectedStudents = [];
   }
-  
+
   removeStudent(student: any) {
     this.allStudents.push(student);
     const idx = this.turmaStudents.indexOf(student);

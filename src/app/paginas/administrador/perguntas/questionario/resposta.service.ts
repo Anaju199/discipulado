@@ -10,10 +10,11 @@ import { Resposta } from './questionario';
 export class RespostaService {
   private readonly API = environment.apiUrl + 'respostas_discipulado'
   private readonly API_LISTA = environment.apiUrl + 'lista_respostas_discipulado/'
+  private readonly API_VERIFICA = environment.apiUrl + 'verificar_resposta'
 
   constructor(private http: HttpClient) { }
 
-  listar(filtroPesquisa: string, usuario: number): Observable<Resposta[]> {
+  listar(filtroPesquisa: string, usuario: number, turma: number): Observable<Resposta[]> {
 
     let params = new HttpParams()
 
@@ -23,6 +24,10 @@ export class RespostaService {
 
     if(usuario > 0){
       params = params.set("usuario",usuario)
+    }
+
+    if(turma > 0){
+      params = params.set("turma",turma)
     }
 
     return this.http.get<Resposta[]>(this.API_LISTA, {params})
@@ -57,4 +62,26 @@ export class RespostaService {
     const url = `${this.API}/${id}/`
     return this.http.get<Resposta>(url)
   }
+
+  buscarResposta(usuarioId: string, turmaId: string, perguntaId: number): Observable<Resposta | null> {
+
+    let params = new HttpParams()
+
+    if(usuarioId.trim().length > 0){
+      params = params.set("usuario",usuarioId)
+    }
+
+    if(turmaId.trim().length > 0){
+      params = params.set("turma",turmaId)
+    }
+
+    if(perguntaId > 0){
+      params = params.set("pergunta",perguntaId)
+    }
+
+    const url = `${this.API_VERIFICA}/`;
+    return this.http.get<Resposta | null>(url, {params});
+  }
+
+
 }
