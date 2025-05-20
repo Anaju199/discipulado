@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:8000/hom_',
-  // apiUrl: 'https://anajulia.pythonanywhere.com/hom_',
+  // apiUrl: 'http://127.0.0.1:8000/hom_',
+  apiUrl: 'https://anajulia.pythonanywhere.com/hom_',
   // urlImagem: 'https://anajulia.pythonanywhere.com',
   urlImagem: 'http://127.0.0.1:8000',
   apiUrlPagSeguro: 'https://sandbox.api.pagseguro.com',
